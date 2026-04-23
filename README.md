@@ -13,7 +13,6 @@ Este proyecto aplica competencias reales de ingeniería, incluyendo el diseño d
 ---
 
 ## Edpoins
-Monitoreo de precios 
 ### 1. Monitoreo de Precios
 
 | Método | Ruta | Parámetros | Descripción | Respuesta (JSON) |
