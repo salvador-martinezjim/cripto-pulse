@@ -11,6 +11,13 @@
 Este proyecto aplica competencias reales de ingeniería, incluyendo el diseño de arquitecturas orientadas a servicios, persistencia de datos relacionales y despliegue automatizado mediante pipelines de CI/CD.
 
 ---
+##  Plan de Trabajo
+
+- [x] **Fase 1:** Diseño de arquitectura y configuración de repositorio *(Actual)*.
+- [ ] **Fase 2:** Implementación del modelo de datos y contenedores de base de datos.
+- [ ] **Fase 3:** Integración con APIs externas y lógica de monitoreo.
+- [ ] **Fase 4:** Implementación de alertas y persistencia de historial.
+- [ ] **Fase 5:** Automatización de pruebas y configuración de Pipeline CI/CD.
 
 ## Edpoins
 ### 1. Monitoreo de Precios
@@ -51,3 +58,33 @@ graph TD
     subgraph "Automatización"
     GHA[GitHub Actions] -->|CI/CD| API
     end
+
+erDiagram
+    users ||--o{ alerts : "crea"
+    cryptocurrencies ||--o{ price_history : "registra"
+    cryptocurrencies ||--o{ alerts : "referenciada_en"
+
+    users {
+        UUID id PK
+        VARCHAR email
+        TIMESTAMP created_at
+    }
+    cryptocurrencies {
+        VARCHAR symbol PK
+        VARCHAR name
+    }
+    price_history {
+        BIGINT id PK
+        VARCHAR crypto_symbol FK
+        NUMERIC price
+        TIMESTAMP recorded_at
+    }
+    alerts {
+        UUID id PK
+        UUID user_id FK
+        VARCHAR crypto_symbol FK
+        NUMERIC target_price
+        VARCHAR condition
+        VARCHAR status
+        TIMESTAMP created_at
+    }
