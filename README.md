@@ -42,49 +42,24 @@ Este proyecto aplica competencias reales de ingeniería, incluyendo el diseño d
 | **GET** | `/api/v1/history/{symbol}`| `?from=date&to=date`| Obtiene el historial de precios para gráficas. | `[{"timestamp": "...", "price": 64000}, ...]` |
 
 ##  Arquitectura del Sistema
+
 El sistema sigue una arquitectura de capas (N-Tier) y se despliega utilizando contenedores para asegurar la paridad entre los entornos de desarrollo y producción.
 
+
+
 ```mermaid
+
 graph TD
+
     User((Usuario/Cliente)) -->|Peticiones REST| API[Cripto Pulse API - Spring Boot]
     API -->|Persistencia| DB[(PostgreSQL)]
-    API -->|Consulta Precios| ExtAPI[Servicios Externos: CoinGecko/Binance]
-    
+    API -->|Consulta Precios| ExtAPI[Servicios Externos: CoinGecko/Binance]  
+
     subgraph "Infraestructura (Docker)"
     API
     DB
-    end
-    
+    end    
+
     subgraph "Automatización"
     GHA[GitHub Actions] -->|CI/CD| API
     end
-
-erDiagram
-    users ||--o{ alerts : "crea"
-    cryptocurrencies ||--o{ price_history : "registra"
-    cryptocurrencies ||--o{ alerts : "referenciada_en"
-
-    users {
-        UUID id PK
-        VARCHAR email
-        TIMESTAMP created_at
-    }
-    cryptocurrencies {
-        VARCHAR symbol PK
-        VARCHAR name
-    }
-    price_history {
-        BIGINT id PK
-        VARCHAR crypto_symbol FK
-        NUMERIC price
-        TIMESTAMP recorded_at
-    }
-    alerts {
-        UUID id PK
-        UUID user_id FK
-        VARCHAR crypto_symbol FK
-        NUMERIC target_price
-        VARCHAR condition
-        VARCHAR status
-        TIMESTAMP created_at
-    }
