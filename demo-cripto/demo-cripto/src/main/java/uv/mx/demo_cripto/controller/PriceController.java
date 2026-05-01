@@ -26,4 +26,20 @@ public class PriceController {
         // Entregamos la orden exitosa (Código 200 OK)
         return ResponseEntity.ok(prices);
     }
+
+    // NUEVO ENDPOINT: GET /api/v1/prices/{symbol}
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> getCryptoDetails(@PathVariable String id) {
+        
+        // El mesero le pide los detalles al cocinero (pasamos el texto a minúsculas por seguridad)
+        Map<String, Object> details = cryptoService.getCryptoDetails(id.toLowerCase());
+        
+        // Validamos si el cocinero nos regresó un error
+        if (details.containsKey("error")) {
+            return ResponseEntity.status(404).body(details); // Devolvemos error 404 Not Found
+        }
+        
+        // Entregamos la orden exitosa (Código 200 OK)
+        return ResponseEntity.ok(details);
+    }
 }
