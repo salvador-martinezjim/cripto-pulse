@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: criptopulse_db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: criptopulse
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data_v2:/var/lib/postgresql/data 
+
+volumes:
+  postgres_data_v2:
