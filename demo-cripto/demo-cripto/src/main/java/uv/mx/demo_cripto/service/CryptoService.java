@@ -12,43 +12,62 @@ import java.util.Map;
 public class CryptoService {
 
     private final RestTemplate restTemplate;
-    private final PriceHistoryRepository repository; // <-- Inyectamos tu nueva base de datos
+    private final PriceHistoryRepository repository; 
     
     private final String COINGECKO_URL = "https://api.coingecko.com/api/v3/simple/price?ids={symbols}&vs_currencies=usd";
 
-    // Spring Boot nos entrega el RestTemplate y el Repositorio automáticamente
     public CryptoService(RestTemplate restTemplate, PriceHistoryRepository repository) {
         this.restTemplate = restTemplate;
         this.repository = repository;
     }
 
+    // ==========================================================
+    // RECETA 1: Obtener varios precios y guardar en BD (El que ya teníamos)
+    // ==========================================================
     public Map<String, Object> getPrices(String symbols) {
-        // 1. El cocinero va a internet por los datos (CoinGecko)
         Map<String, Map<String, Number>> response = restTemplate.getForObject(COINGECKO_URL, Map.class, symbols);
 
         if (response != null) {
-            // 2. Recorremos el JSON que nos dio CoinGecko
             response.forEach((cryptoSymbol, priceData) -> {
                 if (priceData != null && priceData.containsKey("usd")) {
-                    
-                    // Extraemos el precio y lo convertimos a un formato decimal exacto
                     BigDecimal currentPrice = new BigDecimal(priceData.get("usd").toString());
 
-                    // 3. Creamos una nueva "Fila" para nuestra tabla en Java
                     PriceHistory history = new PriceHistory();
                     history.setCryptoSymbol(cryptoSymbol);
                     history.setPrice(currentPrice);
 
-                    // 4. ¡LA MAGIA! Guardamos en PostgreSQL de forma permanente
                     repository.save(history);
-                    
-                    // Imprimimos en la terminal para que veas que funcionó
                     System.out.println("✅ Guardado en BD: " + cryptoSymbol + " -> $" + currentPrice);
                 }
             });
         }
-
-        // 5. El cocinero le entrega la comida al mesero (Controlador)
         return (Map) response;
+    }
+
+    // ==========================================================
+    // RECETA 2: ¡EL NUEVO! Detalle de una sola moneda (Para la Fase 3)
+    // ==========================================================
+    public Map<String, Object> getCryptoDetails(String coinId) {
+        String url = "https://api.coingecko.com/api/v3/coins/" + coinId;
+        
+        try {
+            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+            
+            if (response != null) {
+                Map<String, Object> marketData = (Map<String, Object>) response.get("market_data");
+                Map<String, Object> currentPrices = (Map<String, Object>) marketData.get("current_price");
+                
+                return Map.of(
+                    "name", response.get("name"), 
+                    "symbol", response.get("symbol").toString().toUpperCase(), 
+                    "current_price", currentPrices.get("usd"), 
+                    "change_24h", marketData.get("price_change_percentage_24h") 
+                );
+            }
+        } catch (Exception e) {
+            return Map.of("error", "Criptomoneda '" + coinId + "' no encontrada.");
+        }
+        
+        return Map.of("error", "No se pudo obtener la información.");
     }
 }
