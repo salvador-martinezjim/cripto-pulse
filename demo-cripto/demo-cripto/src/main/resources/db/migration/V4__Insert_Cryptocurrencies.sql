@@ -1,0 +1,1 @@
+INSERT INTO cryptocurrencies (symbol, name) VALUES ('BTC', 'Bitcoin');
