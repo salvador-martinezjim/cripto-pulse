@@ -26,7 +26,7 @@ public class AlertService {
         alert.setCryptoSymbol(request.getSymbol());
         alert.setTargetPrice(request.getTarget_price());
         alert.setCondition(request.getCondition());
-        alert.setStatus("active");
+        alert.setStatus("ACTIVE");
         
         Alert savedAlert = alertRepository.save(alert);
 
