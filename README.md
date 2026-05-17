@@ -1,3 +1,4 @@
+![CI Pipeline](https://github.com/salvador-martinezjim/cripto-pulse/actions/workflows/ci.yml/badge.svg?branch=features-ricardo)
 # Cripto Pulse 📈
 
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=java&logoColor=white)
