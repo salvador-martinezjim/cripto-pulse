@@ -1,0 +1,37 @@
+name: CI Pipeline CriptoPulse
+
+# Esto le dice a GitHub que corra este archivo cada vez que suban código a estas ramas
+on:
+  push:
+    branches: [ "main", "develop", "features-ricardo" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest # Computadora virtual con Linux
+
+    steps:
+    # 1. Clona tu repositorio en la computadora virtual
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    # 2. Instala Java 21
+    - name: Configurar JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+
+    # 3. Ejecuta las pruebas desde la raíz del repositorio git
+    - name: Ejecutar Pruebas (Tests)
+      run: mvn clean test
+      working-directory: ./demo-cripto/demo-cripto 
+
+    # 4. Construye la imagen de Docker
+    - name: Construir Imagen Docker
+      run: docker build -t criptopulse-api:latest .
+      working-directory: ./demo-cripto/demo-cripto
+
+      
