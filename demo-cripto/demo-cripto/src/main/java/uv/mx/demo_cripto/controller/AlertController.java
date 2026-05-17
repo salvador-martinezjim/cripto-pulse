@@ -8,6 +8,7 @@ import uv.mx.demo_cripto.dto.AlertResponse;
 import uv.mx.demo_cripto.service.AlertService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/alerts")
@@ -27,5 +28,11 @@ public class AlertController {
     @GetMapping
     public ResponseEntity<List<AlertResponse>> getAlerts() {
         return ResponseEntity.ok(alertService.getAllAlerts());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAlert(@PathVariable UUID id) {
+        alertService.deleteAlert(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -14,8 +14,8 @@ Este proyecto aplica competencias reales de ingeniería, incluyendo el diseño d
 ##  Plan de Trabajo
 
 - [x] **Fase 1:** Diseño de arquitectura y configuración de repositorio *(Actual)*.
-- [ ] **Fase 2:** Implementación del modelo de datos y contenedores de base de datos.
-- [ ] **Fase 3:** Integración con APIs externas y lógica de monitoreo.
+- [x] **Fase 2:** Implementación del modelo de datos y contenedores de base de datos.
+- [x] **Fase 3:** Integración con APIs externas y lógica de monitoreo.
 - [ ] **Fase 4:** Implementación de alertas y persistencia de historial.
 - [ ] **Fase 5:** Automatización de pruebas y configuración de Pipeline CI/CD.
 
@@ -98,3 +98,47 @@ erDiagram
         VARCHAR status 
         TIMESTAMP created_at
     }
+```
+
+## 🐳 Fase 3: Despliegue con Docker (Contenedorización)
+
+El proyecto "Cripto Pulse" está completamente contenedorizado utilizando Docker y Docker Compose. Esto garantiza que la API y la base de datos PostgreSQL funcionen de manera idéntica y aislada en cualquier entorno, resolviendo el problema de "en mi máquina sí funciona".
+
+### Requisitos Previos
+* Tener [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado y en ejecución.
+* Crear un archivo `.env` en la raíz del proyecto (al mismo nivel que `docker-compose.yml`) con las siguientes credenciales:
+  ```env
+  DB_NAME=criptopulse
+  DB_USER=postgres
+  DB_PASSWORD=tu_password_aqui
+  API_KEY=tu_api_key_de_coingecko_aqui_o_vacio
+
+### 🚀 Comandos de Ejecución
+
+**1. Construir y levantar los contenedores:**
+Ejecuta el siguiente comando en la raíz del proyecto. Esto leerá el `Dockerfile`, compilará la API, descargará la imagen de PostgreSQL y levantará ambos servicios en segundo plano (`-d`).
+`bash
+docker-compose up --build -d
+`
+
+**2. Verificar que la aplicación funciona:**
+Para comprobar que los contenedores se construyeron correctamente y están corriendo en su red interna, ejecuta:
+`bash
+docker-compose ps
+`
+*(Deberás ver ambos contenedores con el estado `Up`).*
+
+**3. Ver los logs (Opcional):**
+Si necesitas ver qué está pasando dentro de la API de Spring Boot en tiempo real:
+`bash
+docker logs -f criptopulse_api
+`
+
+**4. Detener y limpiar los contenedores:**
+Cuando termines de utilizar el sistema, puedes apagar los contenedores y liberar los puertos con:
+`bash
+docker-compose down
+`
+  
+
+
