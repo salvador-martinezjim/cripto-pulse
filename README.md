@@ -139,7 +139,7 @@ Cuando termines de utilizar el sistema, puedes apagar los contenedores y liberar
 `bash
 docker-compose down
 `
-``.
+``...
   
 
 
