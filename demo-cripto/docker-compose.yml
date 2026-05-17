@@ -1,16 +1,45 @@
-version: '3.8'
 services:
+  # Contenedor de la Base de Datos (Punto 16)
   db:
-    image: postgres:16-alpine
+    image: postgres:16.13
     container_name: criptopulse_db
+    restart: always
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: rootpassword
-      POSTGRES_DB: criptopulse
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5432:5432"
+      - "5433:5432" # El puerto 5433 que usaban en tu consola local
+    networks:
+      - cripto_network
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  # Contenedor de la API (Punto 17)
+  api:
+    build: 
+      context: ./demo-cripto
+      dockerfile: Dockerfile
+    container_name: criptopulse_api
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      # Sobrescribimos el application.yaml para que apunte al contenedor 'db' en el puerto 5432
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - COINGECKO_API_KEY=${API_KEY}
+    depends_on:
+      - db
+    networks:
+      - cripto_network
+
+# Red interna aislada
+networks:
+  cripto_network:
+    driver: bridge
+
+# Volumen para que no se borren los datos si se apaga el contenedor
 volumes:
   postgres_data:
