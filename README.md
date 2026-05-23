@@ -1,3 +1,4 @@
+![CI Pipeline](https://github.com/salvador-martinezjim/cripto-pulse/actions/workflows/ci.yml/badge.svg?branch=features-ricardo)
 # Cripto Pulse 📈
 
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=java&logoColor=white)
@@ -139,6 +140,7 @@ Cuando termines de utilizar el sistema, puedes apagar los contenedores y liberar
 `bash
 docker-compose down
 `
+``...
   
 
 
