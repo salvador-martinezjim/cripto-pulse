@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5433/criptopulse
-    username: root
-    password: rootpassword
+    username: postgres
+    password: admin123
     driver-class-name: org.postgresql.Driver
 
   jpa:

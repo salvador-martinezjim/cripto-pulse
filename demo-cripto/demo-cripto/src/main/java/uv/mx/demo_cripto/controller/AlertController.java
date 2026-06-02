@@ -10,6 +10,7 @@ import uv.mx.demo_cripto.service.AlertService;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/alerts")
 public class AlertController {

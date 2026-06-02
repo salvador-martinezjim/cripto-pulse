@@ -1,38 +1,38 @@
 package uv.mx.demo_cripto.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uv.mx.demo_cripto.entity.PriceHistory;
-import uv.mx.demo_cripto.service.HistoryService;
+import uv.mx.demo_cripto.service.CryptoService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/api/v1/history") // La ruta base según tu README
+@RequestMapping("/api/v1/history") // Tu ruta base intacta
 public class HistoryController {
 
-    private final HistoryService historyService;
+    @Autowired
+    private CryptoService cryptoService; // Usamos el servicio que va a CoinGecko
 
-    public HistoryController(HistoryService historyService) {
-        this.historyService = historyService;
-    }
-
-    // Ruta final: GET /api/v1/history/bitcoin?from=...&to=...
+    // Ruta final: GET /api/v1/history/{symbol}
     @GetMapping("/{symbol}")
-    public ResponseEntity<List<PriceHistory>> getCryptoHistory(
-            @PathVariable String symbol, // Atrapa el 'bitcoin' o 'ethereum' de la URL
-            @RequestParam(required = false) 
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from, // Atrapa la fecha de inicio
-            @RequestParam(required = false) 
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to // Atrapa la fecha de fin
+    public ResponseEntity<List<Map<String, Object>>> getCryptoHistory(
+            @PathVariable String symbol, 
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from, 
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to 
     ) {
-        // Le pedimos al cocinero el historial
-        List<PriceHistory> history = historyService.getHistory(symbol, from, to);
+        // Por ahora ignoramos los parámetros 'from' y 'to' y le pedimos al servicio 
+        // los últimos 7 días de datos reales de CoinGecko
+        List<Map<String, Object>> history = cryptoService.getMarketHistory(symbol);
         
-        // Si no hay datos, podemos devolver un 404 (Not Found) o una lista vacía.
-        // Una lista vacía con un 200 OK es una buena práctica aquí.
-        return ResponseEntity.ok(history);
+        if (history == null || history.isEmpty()) {
+            return ResponseEntity.notFound().build(); // Si falla CoinGecko, mandamos 404
+        }
+        
+        return ResponseEntity.ok(history); // Devolvemos el JSON exacto que espera React
     }
 }
