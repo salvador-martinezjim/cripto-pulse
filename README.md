@@ -16,8 +16,8 @@ Este proyecto aplica competencias reales de ingeniería, incluyendo el diseño d
 - [x] **Fase 1:** Diseño de arquitectura y configuración de repositorio *(Actual)*.
 - [x] **Fase 2:** Implementación del modelo de datos y contenedores de base de datos.
 - [x] **Fase 3:** Integración con APIs externas y lógica de monitoreo.
-- [ ] **Fase 4:** Implementación de alertas y persistencia de historial.
-- [ ] **Fase 5:** Automatización de pruebas y configuración de Pipeline CI/CD.
+- [x] **Fase 4:** Implementación de alertas y persistencia de historial.
+- [x] **Fase 5:** Automatización de pruebas y configuración de Pipeline CI/CD.
 
 ## Edpoins
 ### 1. Monitoreo de Precios
